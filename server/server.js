@@ -1364,6 +1364,13 @@ app.post('/api/razorapypending', async (req, res) => {
 
     const { sub } = req.body;
 
+    // Validate that `sub` matches expected Razorpay subscription ID pattern.
+    // Typical Razorpay subscription IDs look like "sub_123abcXYZ"
+    const SUBSCRIPTION_ID_PATTERN = /^sub_[a-zA-Z0-9\-_]+$/;
+    if (!SUBSCRIPTION_ID_PATTERN.test(sub)) {
+        return res.status(400).json({ success: false, message: 'Invalid subscription id format.' });
+    }
+
     const YOUR_KEY_ID = process.env.RAZORPAY_KEY_ID;
     const YOUR_KEY_SECRET = process.env.RAZORPAY_KEY_SECRET;
     const SUBSCRIPTION_ID = sub;
